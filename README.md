@@ -2,4 +2,4 @@
 
 # RUN AS ADMIN (from terminal)
 
-pip install -r requirements.txt
++ pip install -r requirements.txt
