@@ -25,14 +25,6 @@ sleep(2)
 
 
 
-
-
-
-
-
-
-
-
 sys.setrecursionlimit(2147483647)
 init()
 
@@ -40,7 +32,6 @@ ua = UserAgent()
 user_agent = ua.random
 
 options = webdriver.ChromeOptions()
-
 for messages_eror in [0,1,2,3,4]:
     options.add_argument(f"log-level={messages_eror}")
 options.add_argument(f'user-agent={user_agent}')
@@ -120,25 +111,44 @@ def printElement():
 def Favorites(nameAccount):
     print("!Автор ниразу туда не заходил, так что не знает как работает!")
 def commentHearsAll(urlVideo,nameAccount):
-    print("Автор скоро это сделает")
+    print("Автор еще это не сделал!")
     #urlVideo = checkLink(urlVideo, 'https://')
-    #nameAccount = checkLink(nameAccount,'@')
     #if len(urlVideo) != 0:
-    #    driver.find_element(By.XPATH, f'/html/body/div[9]/div/form/div/input').clear()
-    #    driver.find_element(By.XPATH, f'/html/body/div[9]/div/form/div/input').send_keys(urlVideo)
-    #    driver.find_element(By.XPATH, f'/html/body/div[9]/div/form/div/div/button').click()
-    #    sleep(10)
-    #    driver.find_element(By.XPATH, f'/html/body/div[9]/div/div/div[1]/div/form/button').click()
-    #    #/html/body/div[9]/div/div/form/ul/li/div/button
-    #    sleep(3)
+        #driver.find_element(By.XPATH, f'/html/body/div[9]/div/form/div/input').clear()
+        #driver.find_element(By.XPATH, f'/html/body/div[9]/div/form/div/input').send_keys(urlVideo)
+        #driver.find_element(By.XPATH, f'/html/body/div[9]/div/form/div/div/button').click()
+        #sleep(7)
+        #driver.find_element(By.XPATH, f'/html/body/div[9]/div/div/div[1]/div/form/button').click()
+        #/html/body/div[9]/div/div/form/ul/li/div/button
+
+        #ul_elements = driver.find_elements(By.CSS_SELECTOR,'[data-dism="modal"]')
+        #print(ul_elements)
+        ## Флаг для отслеживания нахождения текста в хотя бы одном элементе
+        #text_found = False
+
+        # Проверка содержимого каждого элемента
+        #for ul_element in ul_elements:
+        #    print(ul_element[ul_element].text)
+        #    if nameAccount in ul_element[ul_element].text:
+
+                # Текст найден в текущем элементе
+                #text_found = True
+                # Можно выполнить дополнительные действия или просто вывести сообщение
+                #print("Текст найден в элементе <ul>.")
+                #/html/body/div[9]/div/div/form/ul
+                #/html/body/div[9]/div/div/form/ul/li/div/button
+
+        # Проверка, был ли найден текст хотя бы в одном элементе
+        #if not text_found:
+            #print("Текст не найден ни в одном элементе <ul>.")
+        #sleep(3)
     #else:
-    #    print("Вы ввели пустую строку:(")
-    #    exit()
+        #print("Вы ввели пустую строку:(")
+        #exit()
 
 def rangeValue(urlVideo,choiseButton):
     try:
         old_text = driver.find_element(By.XPATH,f"/html/body/div[{buttons2[choiseButton]}]/div/div/div[1]/div/form/button").text
-        old_text = old_text.replace(',', '')
         print(f'{Fore.GREEN}Total{Fore.RESET} {Fore.RED+old_text+Fore.RESET} {Fore.GREEN + buttons5[choiseButton] + Fore.RESET}')
         sleep(2)
         driver.find_element(By.XPATH,
@@ -163,6 +173,7 @@ def h_v_s_f_All(urlVideo,choiseButton):
     else:
         print("Вы ввели пустую строку:(")
 def check_timer_for_hvsf(urlVideo, choiseButton):
+    sleep(2)
     isReady = driver.find_element(By.CLASS_NAME, buttons3[choiseButton])
     if isReady.text != 'Next Submit: READY....!':
         sleep(2)
@@ -182,8 +193,10 @@ def changeImage(nameImage):
     driver.save_screenshot(f"captcha/{nameImage}")
     image = Image.open(f"captcha/{nameImage}")
     screen_height = driver.execute_script("return window.innerHeight")
-    cropped_image = image.crop((0, 0, image.width - 100, screen_height - 300))
+    cropped_image = image.crop((0, 0, image.width - 50, screen_height - 100))
     cropped_image.save(f"captcha/{nameImage}")
+    img = Image.open(f'captcha/{nameImage}')
+    img.show()
 def main():
 
     print(Fore.GREEN + "Дождитесь пока откроется страница." + Fore.RESET, '\n\n')
@@ -192,32 +205,33 @@ def main():
     print(Fore.RED + "При не правильной капче программа выведет ошибку" + Fore.RESET)
     changeImage('captcha.png')
     captcha = input(Fore.GREEN + "Введите код с капчи: " + Fore.RESET).lower()
-
-
-    connectCaptcha(captcha)
-    printElement()
-    try:
-        choiseButton = int(input("Выбери: "))
-        if choiseButton in disButton:
-            print("Эта кнопка отключена :(")
-        else:
-            driver.find_element(By.XPATH, buttons[choiseButton]).click()
-            if choiseButton in [2, 4, 5, 6]:
-                urlVideo = input("Введите url видео: ")
-                clear()
-                h_v_s_f_All(urlVideo,choiseButton)
-
-            elif choiseButton == 3:
-                urlVideo = input("Введите url видео: ")
-                accountName = input("Введите account name: ")
-                clear()
-                commentHearsAll(urlVideo,accountName)
+    if (len(captcha)!=0):
+        connectCaptcha(captcha)
+        printElement()
+        try:
+            choiseButton = int(input("Выбери: "))
+            if choiseButton in disButton:
+                print("Эта кнопка отключена :(")
             else:
-                print(Fore.RED + "Такой кнопки нет :(")
-    except Exception as ex:
-        print(ex)
-        print(10*'\n')
-        print("(Возможно вы не правильно ввели капчу)", 3*'\n')
+                driver.find_element(By.XPATH, buttons[choiseButton]).click()
+                if choiseButton in [2, 4, 5, 6]:
+                    urlVideo = input("Введите url видео: ")
+                    clear()
+                    h_v_s_f_All(urlVideo,choiseButton)
+
+                elif choiseButton == 3:
+                    urlVideo = input("Введите url видео: ")
+                    accountName = input("Введите account name: ")
+                    clear()
+                    commentHearsAll(urlVideo,accountName)
+                else:
+                    print(Fore.RED + "Такой кнопки нет :(")
+        except Exception as ex:
+            print(ex)
+            print(10*'\n')
+            print("(Возможно вы не правильно ввели капчу)", 3*'\n')
+    else:
+        main()
 
 if __name__ == '__main__':
     if is_admin():
