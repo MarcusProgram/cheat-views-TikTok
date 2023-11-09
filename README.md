@@ -11,5 +11,5 @@ ___
 
 <h3>Second</h3>
 <p>
-<img width="200" src="assets/cd.png"/>
+<img width="500" src="assets/cd.png"/>
 </p>
